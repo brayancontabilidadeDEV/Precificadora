@@ -202,10 +202,10 @@
     </button>
 
     <!-- JavaScript -->
-    <script src="js/constants.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/calculations.js"></script>
-    <script src="js/charts.js"></script>
-    <script src="js/main.js"></script>
+<script src="js/constants.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/calculations.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
