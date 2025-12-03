@@ -1,4 +1,4 @@
-// ==================== CONSTANTES GLOBAIS ====================
+// ==================== CONSTANTES E CONFIGURAÇÕES ====================
 
 const CENARIOS_IVA = {
     pessimista: {
@@ -24,12 +24,13 @@ const CENARIOS_IVA = {
     }
 };
 
+// Dados CORRIGIDOS para estados
 const INFO_ESTADOS_CORRIGIDO = {
     'SC': { 
         icms: 17.0,
         iss: 5.0,
         beneficios: ['SIMPLES Catarinense', 'Incentivos TI', 'Polo Tecnológico'],
-        beneficiosDesconto: 0.10,
+        beneficiosDesconto: 0.10, // 10% de desconto em benefícios estaduais
         score: 8.5,
         descricao: 'Menor ICMS do país, excelente para tecnologia e inovação'
     },
@@ -91,6 +92,7 @@ const INFO_ESTADOS_CORRIGIDO = {
     }
 };
 
+// Dados para comparação internacional
 const COMPARACAO_INTERNACIONAL = {
     'brasil-atual': {
         nome: 'Brasil (Atual)',
@@ -194,6 +196,7 @@ const COMPARACAO_INTERNACIONAL = {
     }
 };
 
+// Custos de implantação detalhados
 const CUSTOS_IMPLANTACAO_DETALHADO = {
     'micro': {
         descricao: 'Microempresa (Até R$ 360 mil/ano)',
@@ -364,8 +367,3 @@ const SIMPLES_ALIQUOTAS = {
         { limite: 4800000, aliquota: 19.0, deducao: 378000 }
     ]
 };
-
-// Variáveis globais (serão inicializadas no main.js)
-let cenarioAtual = 'base';
-let historicoSimulacoes = [];
-let charts = {};
