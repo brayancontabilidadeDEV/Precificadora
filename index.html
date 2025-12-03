@@ -3,209 +3,2571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Reforma Tributária | Brayan Araujo Contador</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="https://cdn.tailwindcss.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/charts.css">
-    
-    <!-- JavaScript Libraries -->
+    <title>Calculadora de Precificação Avançada - Especialista MEI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .concept-tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted #3b82f6;
+        }
+        .concept-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: pre-wrap;
+            width: 300px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .print-only {
+            display: none;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .print-only {
+                display: block;
+            }
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .risk-low { background-color: #10b981; }
+        .risk-medium { background-color: #f59e0b; }
+        .risk-high { background-color: #ef4444; }
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body class="min-h-screen text-gray-800">
-    <div class="container mx-auto px-4 py-6 max-w-7xl">
-        
-        <!-- DISCLAIMER LEGAL -->
-        <div class="alert-box alert-warning animate-slide-up">
-            <div class="flex items-start gap-4">
-                <div class="text-3xl">⚠️</div>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-3 mb-4">
+                <div class="bg-blue-600 p-3 rounded-full">
+                    <i class="fas fa-calculator text-white text-2xl"></i>
+                </div>
                 <div>
-                    <h2 class="text-xl font-bold mb-3">AVISO LEGAL IMPORTANTE</h2>
-                    <div class="space-y-3 text-sm">
-                        <p><strong>📋 SIMULAÇÃO ILUSTRATIVA:</strong> Esta calculadora utiliza estimativas baseadas na EC 132/2023 e PLP 68/2024 em tramitação.</p>
-                        <p><strong>⚖️ REGULAMENTAÇÃO EM CURSO:</strong> As alíquotas definitivas serão definidas por Lei Complementar. Valores podem sofrer alterações.</p>
-                        <p><strong>🚫 NÃO SUBSTITUI CONSULTORIA:</strong> Não utilize para tomada de decisões sem consultar um contador ou advogado tributarista.</p>
-                        <p><strong>📊 FINALIDADE EDUCACIONAL:</strong> Esta ferramenta tem propósito informativo sobre os conceitos da reforma.</p>
-                        <p><strong>✅ ÚLTIMA ATUALIZAÇÃO:</strong> Dezembro/2024 - Baseado em cenários estimados pela FGV e CCiF</p>
-                    </div>
+                    <h1 class="text-4xl font-bold text-gray-800">Calculadora de Precificação Avançada</h1>
+                    <p class="text-gray-600 mt-2">Ferramenta completa para MEIs - Inclui análise de mercado e investimento</p>
                 </div>
+            </div>
+            <div class="bg-blue-100 border border-blue-200 rounded-lg p-3 inline-block">
+                <p class="text-sm text-blue-800">
+                    <i class="fas fa-lightbulb mr-2"></i>
+                    <strong>NOVO:</strong> Análise de mercado completa + cálculo de retorno sobre investimento
+                </p>
             </div>
         </div>
 
-        <!-- HEADER COM LOGO PROFISSIONAL -->
-        <header class="card shadow-hard mb-8 animate-slide-up">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="logo-container">
-                    <div class="logo-icon">B</div>
-                    <div class="logo-text">
-                        <div class="logo-title">BRAYAN ARAUJO</div>
-                        <div class="logo-subtitle">CONTADOR | CRC 1SPXXXXXX</div>
+        <!-- Tabs de Navegação -->
+        <div class="flex flex-wrap gap-2 mb-6 no-print">
+            <button onclick="openTab('dados')" id="tabDados" class="tab-btn px-4 py-2 rounded-lg font-medium bg-blue-600 text-white">
+                <i class="fas fa-edit mr-2"></i>1. Dados de Entrada
+            </button>
+            <button onclick="openTab('investimento')" id="tabInvestimento" class="tab-btn px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-700">
+                <i class="fas fa-chart-line mr-2"></i>2. Investimento & ROI
+            </button>
+            <button onclick="openTab('mercado')" id="tabMercado" class="tab-btn px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-700">
+                <i class="fas fa-globe mr-2"></i>3. Análise de Mercado
+            </button>
+            <button onclick="openTab('resultados')" id="tabResultados" class="tab-btn px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-700">
+                <i class="fas fa-calculator mr-2"></i>4. Resultados
+            </button>
+            <button onclick="openTab('graficos')" id="tabGraficos" class="tab-btn px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-700">
+                <i class="fas fa-chart-pie mr-2"></i>5. Gráficos
+            </button>
+            <button onclick="openTab('comparativo')" id="tabComparativo" class="tab-btn px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-700">
+                <i class="fas fa-balance-scale mr-2"></i>6. Comparativo
+            </button>
+            <button onclick="openTab('didatica')" id="tabDidatica" class="tab-btn px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-700">
+                <i class="fas fa-graduation-cap mr-2"></i>7. Aprendizado
+            </button>
+        </div>
+
+        <!-- Conteúdo das Tabs -->
+        <div id="conteudo">
+            <!-- Tab 1: Dados de Entrada -->
+            <div id="dados" class="tab-content active">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Seção 1: Custos Variáveis -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fas fa-boxes text-blue-600"></i> Custos Variáveis (por unidade)
+                                </h2>
+                                <span class="concept-tooltip text-sm text-blue-600" data-tooltip="Custos que variam conforme a quantidade produzida/vendida. Exemplo: matéria-prima, embalagem por unidade.">
+                                    <i class="fas fa-info-circle"></i> O que são?
+                                </span>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Matéria-prima/Produto <span class="text-red-500">*</span></label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="materiaPrima" placeholder="Ex: 15,50" 
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Embalagem (por unidade)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="embalagem" placeholder="Ex: 1,50"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Frete/Entrega (por unidade)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="frete" placeholder="Ex: 5,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Outros Custos Variáveis</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="outrosCustosVar" placeholder="Ex: 0,50"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção 2: Custos Fixos -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fas fa-building text-blue-600"></i> Custos Fixos Mensais
+                                </h2>
+                                <span class="concept-tooltip text-sm text-blue-600" data-tooltip="Custos que não variam com a produção/venda. Exemplo: aluguel, salários fixos, internet, mesmo que venda zero.">
+                                    <i class="fas fa-info-circle"></i> O que são?
+                                </span>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Aluguel/Manutenção Local</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="aluguel" placeholder="Ex: 800,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Salários/Pró-labore <span class="text-red-500">*</span></label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="salarios" placeholder="Ex: 1200,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Energia/Água/Gás</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="energia" placeholder="Ex: 150,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Internet/Telefone</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="internet" placeholder="Ex: 100,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Marketing/Publicidade</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="marketing" placeholder="Ex: 200,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Manutenção de Equipamentos</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="manutencao" placeholder="Ex: 100,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção 3: Custos Adicionais e Tecnologia -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-laptop-code text-blue-600"></i> Custos de Tecnologia e Adicionais
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Software/Sistemas (mensal)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="software" placeholder="Ex: 89,90"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Taxas de Pagamento (%)</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" id="taxasPagamento" placeholder="Ex: 3,99"
+                                               class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Média de taxas (Mercado Pago, PagSeguro, etc.)</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Devoluções/Garantias (%)</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" id="devolucoes" placeholder="Ex: 2"
+                                               class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Estimativa de custos com devoluções</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Margem de Segurança (%)</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" id="margemSeguranca" placeholder="Ex: 5"
+                                               class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Para imprevistos e variações de custo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção 4: Metas e Tributação -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-bullseye text-blue-600"></i> Metas e Tributação
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Quantidade Esperada de Vendas <span class="text-red-500">*</span></label>
+                                    <input type="number" id="qtdVendaMensal" placeholder="Ex: 100"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    <p class="text-xs text-gray-500">Quantidade de unidades que você espera vender por mês</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Margem Bruta Desejada <span class="text-red-500">*</span></label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" id="margemLucro" placeholder="Ex: 30"
+                                               class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Percentual de lucro sobre o preço de venda (antes dos custos fixos)</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Impostos (DAS + outros)</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" id="impostos" placeholder="Ex: 6,5"
+                                               class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Para MEI: DAS (R$ ~70) + ISS/ICMS se aplicável</p>
+                                    <button type="button" onclick="sugerirImpostosMEI()" class="text-xs text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-magic mr-1"></i> Sugerir para MEI
+                                    </button>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Comissões de Vendas</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" id="comissoes" placeholder="Ex: 5"
+                                               class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Comissão para vendedores ou marketplaces</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                                <p class="text-sm text-blue-800">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    <strong>Atenção:</strong> A margem bruta desejada é diferente da margem líquida. Impostos, comissões e custos fixos serão deduzidos após.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Seção 5: Método de Precificação -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-sliders-h text-blue-600"></i> Configurações de Precificação
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Método Principal</label>
+                                    <select id="metodoPrecificacao" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <option value="markup">Markup (Recomendado)</option>
+                                        <option value="margem">Margem de Contribuição</option>
+                                        <option value="custo">Custo + Margem</option>
+                                        <option value="valor">Precificação por Valor</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Arredondamento</label>
+                                    <select id="arredondamento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <option value="nenhum">Sem arredondamento</option>
+                                        <option value="0.90">Para R$ X,90</option>
+                                        <option value="0.95">Para R$ X,95</option>
+                                        <option value="0.99">Para R$ X,99</option>
+                                        <option value="5">Para múltiplos de R$ 5</option>
+                                        <option value="10">Para múltiplos de R$ 10</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Preço Mínimo Aceitável</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="precoMinimo" placeholder="Ex: 39,90"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Preço da Concorrência</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="precoConcorrencia" placeholder="Ex: 59,90"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="flex flex-wrap gap-3 no-print">
+                            <button onclick="calcularPrecificacaoCompleta()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fas fa-calculator"></i> Calcular Precificação Completa
+                            </button>
+                            <button onclick="limparCampos()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fas fa-broom"></i> Limpar Campos
+                            </button>
+                            <button onclick="carregarExemplo()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fas fa-play-circle"></i> Carregar Exemplo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Painel Lateral - Resumo Rápido -->
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-tachometer-alt text-blue-600"></i> Resumo Rápido
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">Custo Variável Unitário</span>
+                                    <span id="resumoCustoVariavel" class="font-semibold text-gray-800">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">Custo Fixo Unitário</span>
+                                    <span id="resumoCustoFixoUnit" class="font-semibold text-gray-800">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">Custo Total Unitário</span>
+                                    <span id="resumoCustoTotalUnit" class="font-semibold text-gray-800">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">Custos Adicionais Unit.</span>
+                                    <span id="resumoCustosAdicionais" class="font-semibold text-gray-800">R$ 0,00</span>
+                                </div>
+                                <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <p class="text-sm text-yellow-800">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        Preencha todos os campos obrigatórios (*)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Indicadores de Saúde do Negócio -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-heartbeat text-red-600"></i> Indicadores de Saúde
+                            </h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm text-gray-600">Risco de Precificação</span>
+                                        <span id="riscoPrecificacao" class="text-sm font-medium">Baixo</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div id="barraRisco" class="progress-fill risk-low" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm text-gray-600">Margem de Segurança</span>
+                                        <span id="margemSegurancaValor" class="text-sm font-medium">0%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div id="barraMargemSeguranca" class="progress-fill bg-green-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm text-gray-600">Competitividade</span>
+                                        <span id="competitividade" class="text-sm font-medium">--</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div id="barraCompetitividade" class="progress-fill bg-blue-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dicas Rápidas -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-lightbulb text-yellow-500"></i> Dicas do Especialista
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-blue-50 rounded-lg">
+                                    <p class="text-sm text-blue-800">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        <strong>Não esqueça:</strong> Inclua depreciação de equipamentos
+                                    </p>
+                                </div>
+                                <div class="p-3 bg-green-50 rounded-lg">
+                                    <p class="text-sm text-green-800">
+                                        <i class="fas fa-chart-line mr-1"></i>
+                                        <strong>Para MEIs:</strong> Considere 5-8% para impostos + taxas
+                                    </p>
+                                </div>
+                                <div class="p-3 bg-purple-50 rounded-lg">
+                                    <p class="text-sm text-purple-800">
+                                        <i class="fas fa-balance-scale mr-1"></i>
+                                        <strong>Margem realista:</strong> 25% a 45% para maioria dos negócios
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="flex flex-col md:flex-row items-center gap-4">
-                    <button id="darkModeToggle" class="btn-secondary px-5 py-2.5 rounded-full flex items-center gap-2">
-                        <i class="fas fa-moon"></i>
-                        <span>Modo Escuro</span>
-                    </button>
+            </div>
+
+            <!-- Tab 2: Investimento & ROI -->
+            <div id="investimento" class="tab-content">
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <!-- Investimento Inicial -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-piggy-bank text-green-600"></i> Investimento Inicial
+                        </h2>
+                        <p class="text-gray-600 mb-4">Calcule quanto precisa investir e quando terá retorno.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Equipamentos/Máquinas</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="investEquipamentos" placeholder="Ex: 5000,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Estoque Inicial</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="investEstoque" placeholder="Ex: 3000,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Reformas/Adequações</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="investReformas" placeholder="Ex: 2000,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Capital de Giro</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                                        <input type="number" step="0.01" id="investCapitalGiro" placeholder="Ex: 2000,00"
+                                               class="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-3 bg-blue-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-blue-800 font-medium">Investimento Total</span>
+                                    <span id="investimentoTotal" class="text-blue-800 font-bold text-lg">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Retorno sobre Investimento -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-chart-line text-green-600"></i> Retorno sobre Investimento (ROI)
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Expectativa de Retorno (meses)</label>
+                                    <div class="relative">
+                                        <input type="number" id="expectativaRetorno" placeholder="Ex: 12"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">meses</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Em quanto tempo quer recuperar o investimento?</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-sm font-medium text-gray-700">Custo de Oportunidade (%)</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" id="custoOportunidade" placeholder="Ex: 0,75"
+                                               class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Rendimento mensal se investisse no mercado</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Depreciação -->
+                            <div class="border-t pt-4">
+                                <h3 class="font-bold text-gray-700 mb-3">Depreciação de Equipamentos</h3>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="text-sm font-medium text-gray-700">Vida Útil (anos)</label>
+                                        <input type="number" step="0.5" id="vidaUtilEquipamentos" placeholder="Ex: 5"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-sm font-medium text-gray-700">Valor Residual (%)</label>
+                                        <div class="relative">
+                                            <input type="number" step="0.01" id="valorResidual" placeholder="Ex: 10"
+                                                   class="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Resultados do ROI -->
+                            <div id="resultadosROI" class="hidden space-y-3 mt-4">
+                                <div class="p-3 bg-green-50 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-green-800">Lucro Mensal Necessário</span>
+                                        <span id="lucroMensalNecessario" class="text-green-800 font-bold">R$ 0,00</span>
+                                    </div>
+                                    <p class="text-xs text-green-600 mt-1">Para retornar o investimento no prazo</p>
+                                </div>
+                                
+                                <div class="p-3 bg-blue-50 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-blue-800">Payback (Retorno)</span>
+                                        <span id="paybackMeses" class="text-blue-800 font-bold">0 meses</span>
+                                    </div>
+                                    <p class="text-xs text-blue-600 mt-1">Tempo estimado para recuperar investimento</p>
+                                </div>
+                                
+                                <div class="p-3 bg-purple-50 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-purple-800">ROI Anual</span>
+                                        <span id="roiAnual" class="text-purple-800 font-bold">0%</span>
+                                    </div>
+                                    <p class="text-xs text-purple-600 mt-1">Retorno sobre o investimento por ano</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Análise de Viabilidade -->
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-clipboard-check text-blue-600"></i> Análise de Viabilidade
+                        </h2>
+                        
+                        <div class="grid md:grid-cols-4 gap-4">
+                            <div class="p-4 border rounded-lg text-center">
+                                <div class="text-2xl font-bold text-blue-600" id="viabilidadeInvestimento">--</div>
+                                <div class="text-sm text-gray-600 mt-1">Viabilidade</div>
+                                <div class="text-xs text-gray-500">Baseada no ROI</div>
+                            </div>
+                            
+                            <div class="p-4 border rounded-lg text-center">
+                                <div class="text-2xl font-bold text-green-600" id="tempoRetorno">--</div>
+                                <div class="text-sm text-gray-600 mt-1">Retorno Estimado</div>
+                                <div class="text-xs text-gray-500">Em meses</div>
+                            </div>
+                            
+                            <div class="p-4 border rounded-lg text-center">
+                                <div class="text-2xl font-bold text-purple-600" id="lucratividadeProjetada">--</div>
+                                <div class="text-sm text-gray-600 mt-1">Lucratividade</div>
+                                <div class="text-xs text-gray-500">% sobre faturamento</div>
+                            </div>
+                            
+                            <div class="p-4 border rounded-lg text-center">
+                                <div class="text-2xl font-bold text-yellow-600" id="riscoInvestimento">--</div>
+                                <div class="text-sm text-gray-600 mt-1">Risco</div>
+                                <div class="text-xs text-gray-500">Baixo/Médio/Alto</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-bold text-gray-700 mb-2">Recomendação:</h4>
+                            <p id="recomendacaoInvestimento" class="text-gray-600">
+                                Preencha os dados de investimento e de precificação para obter uma análise completa.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Análise de Mercado -->
+            <div id="mercado" class="tab-content">
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <i class="fas fa-globe-americas text-blue-600"></i> Análise de Mercado para Precificação
+                    </h2>
                     
-                    <div class="flex gap-2">
-                        <button id="exportCSV" class="btn-primary px-5 py-2.5 rounded-full flex items-center gap-2">
-                            <i class="fas fa-file-csv"></i>
-                            <span>Exportar CSV</span>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Tendências de Mercado -->
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-chart-line"></i> Tendências 2024-2025
+                                </h4>
+                                <ul class="list-disc pl-5 text-blue-700 space-y-1">
+                                    <li><strong>Sustentabilidade:</strong> Produtos eco-friendly podem ter +15-25% de valor percebido</li>
+                                    <li><strong>Personalização:</strong> Itens personalizados permitem precificação +20-30%</li>
+                                    <li><strong>Conveniência:</strong> Entrega rápida e fácil justifica premium</li>
+                                    <li><strong>Experiência:</strong> Clientes pagam mais por marcas com storytelling</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-bold text-green-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-shopping-cart"></i> Comportamento do Consumidor
+                                </h4>
+                                <ul class="list-disc pl-5 text-green-700 space-y-1">
+                                    <li>57% dos consumidores pesquisam preços online antes de comprar</li>
+                                    <li>Preço é importante, mas não é o único fator de decisão</li>
+                                    <li>Clientes estão dispostos a pagar mais por qualidade comprovada</li>
+                                    <li>Reviews e avaliações influenciam +68% nas decisões de compra</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Estratégias de Precificação -->
+                        <div class="space-y-4">
+                            <div class="p-4 bg-purple-50 rounded-lg">
+                                <h4 class="font-bold text-purple-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-chess-knight"></i> Estratégias por Segmento
+                                </h4>
+                                <ul class="list-disc pl-5 text-purple-700 space-y-1">
+                                    <li><strong>Premium:</strong> Margem 40-60%, foco em qualidade e exclusividade</li>
+                                    <li><strong>Médio:</strong> Margem 25-35%, equilíbrio entre preço e valor</li>
+                                    <li><strong>Econômico:</strong> Margem 15-25%, alta competitividade de preço</li>
+                                    <li><strong>Nicho:</strong> Margem 30-50%, atendimento a necessidades específicas</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-4 bg-yellow-50 rounded-lg">
+                                <h4 class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-lightbulb"></i> Diferenciação Competitiva
+                                </h4>
+                                <ul class="list-disc pl-5 text-yellow-700 space-y-1">
+                                    <li>Ofereça garantia estendida (+5-10% no preço)</li>
+                                    <li>Pacotes e combos aumentam ticket médio</li>
+                                    <li>Atendimento personalizado justifica premium</li>
+                                    <li>Embalagem premium aumenta valor percebido</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ferramenta de Análise de Concorrência -->
+                    <div class="mt-8 p-6 border rounded-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-search-dollar text-blue-600"></i> Análise de Concorrência
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-3 gap-4 mb-6">
+                            <div class="space-y-1">
+                                <label class="text-sm font-medium text-gray-700">Segmento de Mercado</label>
+                                <select id="segmentoMercado" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    <option value="">Selecione...</option>
+                                    <option value="alimentos">Alimentos/Bebidas</option>
+                                    <option value="moda">Moda/Vestuário</option>
+                                    <option value="artesanato">Artesanato/Decoração</option>
+                                    <option value="servicos">Serviços</option>
+                                    <option value="tecnologia">Tecnologia/Acessórios</option>
+                                    <option value="beleza">Beleza/Cosméticos</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <label class="text-sm font-medium text-gray-700">Nível de Concorrência</label>
+                                <select id="nivelConcorrencia" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    <option value="alta">Alta (Muitos concorrentes)</option>
+                                    <option value="media">Média (Alguns concorrentes)</option>
+                                    <option value="baixa">Baixa (Poucos concorrentes)</option>
+                                    <option value="nicho">Nicho (Mercado específico)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <label class="text-sm font-medium text-gray-700">Posicionamento Desejado</label>
+                                <select id="posicionamentoMercado" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                                    <option value="lider">Líder em Preço</option>
+                                    <option value="qualidade">Líder em Qualidade</option>
+                                    <option value="diferente">Diferenciação</option>
+                                    <option value="nicho">Especialista em Nicho</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button onclick="analisarMercado()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                            <i class="fas fa-chart-bar"></i> Gerar Análise de Mercado Personalizada
                         </button>
-                        <button id="exportPDF" class="btn-primary px-5 py-2.5 rounded-full flex items-center gap-2">
-                            <i class="fas fa-file-pdf"></i>
-                            <span>Relatório PDF</span>
-                        </button>
+                        
+                        <!-- Resultados da Análise -->
+                        <div id="resultadosAnaliseMercado" class="hidden mt-6 space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-bold text-blue-800 mb-2">Faixa de Preço Recomendada</h4>
+                                <div class="flex items-center gap-4">
+                                    <div class="text-center flex-1">
+                                        <div class="text-2xl font-bold text-green-600" id="precoMinimoMercado">R$ 0,00</div>
+                                        <div class="text-sm text-gray-600">Mínimo Competitivo</div>
+                                    </div>
+                                    <div class="text-center flex-1">
+                                        <div class="text-2xl font-bold text-blue-600" id="precoRecomendadoMercado">R$ 0,00</div>
+                                        <div class="text-sm text-gray-600">Preço Ideal</div>
+                                    </div>
+                                    <div class="text-center flex-1">
+                                        <div class="text-2xl font-bold text-purple-600" id="precoMaximoMercado">R$ 0,00</div>
+                                        <div class="text-sm text-gray-600">Máximo Aceitável</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-bold text-green-800 mb-2">Estratégias Recomendadas</h4>
+                                <p id="estrategiasRecomendadas" class="text-green-700"></p>
+                            </div>
+                            
+                            <div class="p-4 bg-yellow-50 rounded-lg">
+                                <h4 class="font-bold text-yellow-800 mb-2">Atenções e Riscos</h4>
+                                <p id="riscosMercado" class="text-yellow-700"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabela de Referência por Segmento -->
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Referências de Margem por Segmento (2024)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left border">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-4 py-3 border">Segmento</th>
+                                        <th class="px-4 py-3 border">Margem Bruta Média</th>
+                                        <th class="px-4 py-3 border">Markup Médio</th>
+                                        <th class="px-4 py-3 border">Fatores Críticos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="px-4 py-3 border">Alimentos Artesanais</td>
+                                        <td class="px-4 py-3 border">40-60%</td>
+                                        <td class="px-4 py-3 border">67-150%</td>
+                                        <td class="px-4 py-3 border">Validade, sazonalidade</td>
+                                    </tr>
+                                    <tr class="bg-gray-50">
+                                        <td class="px-4 py-3 border">Moda/Confecção</td>
+                                        <td class="px-4 py-3 border">50-80%</td>
+                                        <td class="px-4 py-3 border">100-400%</td>
+                                        <td class="px-4 py-3 border">Tendências, estoque</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 border">Artesanato</td>
+                                        <td class="px-4 py-3 border">60-100%</td>
+                                        <td class="px-4 py-3 border">150-400%</td>
+                                        <td class="px-4 py-3 border">Exclusividade, tempo produção</td>
+                                    </tr>
+                                    <tr class="bg-gray-50">
+                                        <td class="px-4 py-3 border">Serviços Digitais</td>
+                                        <td class="px-4 py-3 border">70-90%</td>
+                                        <td class="px-4 py-3 border">230-900%</td>
+                                        <td class="px-4 py-3 border">Escalabilidade, expertise</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="text-center mt-8">
-                <h1 class="text-4xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    Calculadora Avançada da Reforma Tributária
-                </h1>
-                <p class="text-gray-600 text-lg">Análise profissional do impacto do IVA Dual (EC 132/2023) em sua empresa</p>
-            </div>
-        </header>
 
-        <!-- RESUMO EXECUTIVO -->
-        <div class="card shadow-soft mb-8 animate-slide-up">
-            <div class="card-header">
-                <h2 class="text-2xl font-bold flex items-center gap-3">
-                    <i class="fas fa-chart-line text-indigo-600"></i>
-                    Resumo Executivo da Simulação
-                </h2>
+            <!-- Tab 4: Resultados -->
+            <div id="resultados" class="tab-content">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Coluna Esquerda - Resultados Principais -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Preço Sugerido -->
+                        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-tags text-2xl"></i>
+                                    <h3 class="text-2xl font-bold">Preço de Venda Sugerido</h3>
+                                </div>
+                                <span class="bg-white text-green-600 px-3 py-1 rounded-full text-sm font-bold" id="metodoUtilizado">Markup</span>
+                            </div>
+                            <p id="precoVenda" class="text-6xl font-bold mb-2">R$ 0,00</p>
+                            <div class="flex flex-wrap gap-4 text-green-100">
+                                <span><i class="fas fa-box mr-1"></i> por unidade</span>
+                                <span id="precoArredondadoInfo"></span>
+                                <span><i class="fas fa-calendar-alt mr-1"></i> <span id="lucroMensalTexto">Lucro mensal: R$ 0,00</span></span>
+                            </div>
+                        </div>
+
+                        <!-- Análise de Rentabilidade -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-line text-blue-600"></i> Análise de Rentabilidade Aprimorada
+                            </h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-3">
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-gray-700">Margem Bruta</span>
+                                            <span id="margemBrutaResultado" class="font-bold text-green-600">0%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div id="barraMargemBruta" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-green-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-gray-700">Margem Líquida</span>
+                                            <span id="margemLiquidaResultado" class="font-bold text-blue-600">0%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div id="barraMargemLiquida" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-purple-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-700">Margem de Contribuição</span>
+                                            <span id="margemContribuicao" class="font-bold text-purple-600">R$ 0,00</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Por unidade: Preço - Custos Variáveis</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <div class="bg-yellow-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-gray-700">Ponto de Equilíbrio</span>
+                                            <span id="pontoEquilibrio" class="font-bold text-orange-600">0 unidades</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Quantidade mínima para não ter prejuízo</p>
+                                    </div>
+                                    
+                                    <div class="bg-red-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-gray-700">Ponto de Equilíbrio Financeiro</span>
+                                            <span id="pontoEquilibrioFinanceiro" class="font-bold text-red-600">R$ 0,00</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Faturamento mínimo para cobrir custos</p>
+                                    </div>
+                                    
+                                    <div class="bg-indigo-50 p-4 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-700">Rentabilidade sobre Investimento</span>
+                                            <span id="roiMensal" class="font-bold text-indigo-600">0%</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Lucro / Investimento Total</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Composição do Preço Detalhada -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-layer-group text-blue-600"></i> Composição Detalhada do Preço
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700">Matéria-prima</span>
+                                        <span id="compMateriaPrima" class="font-semibold">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraMateriaPrima" class="bg-red-400 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700">Outros Custos Variáveis</span>
+                                        <span id="compOutrosVariaveis" class="font-semibold">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraOutrosVariaveis" class="bg-red-300 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700">Custos Fixos (rateados)</span>
+                                        <span id="compCustosFixos" class="font-semibold">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraCustosFixos" class="bg-yellow-500 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700">Impostos e Taxas</span>
+                                        <span id="compImpostos" class="font-semibold">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraImpostos" class="bg-blue-500 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700">Comissões e Taxas Pagamento</span>
+                                        <span id="compComissoes" class="font-semibold">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraComissoes" class="bg-purple-500 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700 font-bold">Lucro Bruto</span>
+                                        <span id="compLucroBruto" class="font-bold text-green-600">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraLucroBruto" class="bg-green-400 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700 font-bold">(-) Depreciação</span>
+                                        <span id="compDepreciacao" class="font-semibold">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraDepreciacao" class="bg-gray-400 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-700 font-bold">Lucro Líquido</span>
+                                        <span id="compLucroLiquido" class="font-bold text-green-700">R$ 0,00 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div id="barraLucroLiquido" class="bg-green-600 h-3 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Direita - Resumo Financeiro -->
+                    <div class="space-y-6">
+                        <!-- Resumo Financeiro -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-file-invoice-dollar text-blue-600"></i> Resumo Financeiro Mensal
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">Faturamento Bruto</span>
+                                    <span id="faturamentoBruto" class="font-bold text-blue-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">(-) Custos Variáveis Totais</span>
+                                    <span id="custosVariaveisTotais" class="font-semibold text-red-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">(=) Margem de Contribuição Total</span>
+                                    <span id="margemContribuicaoTotal" class="font-semibold text-green-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">(-) Custos Fixos</span>
+                                    <span id="custosFixosTotais" class="font-semibold text-red-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">(-) Impostos Totais</span>
+                                    <span id="impostosTotais" class="font-semibold text-blue-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">(-) Comissões e Taxas</span>
+                                    <span id="comissoesTotais" class="font-semibold text-purple-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b">
+                                    <span class="text-gray-600">(-) Depreciação</span>
+                                    <span id="depreciacaoTotal" class="font-semibold text-gray-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 bg-green-50 rounded-lg px-2">
+                                    <span class="text-gray-800 font-bold">(=) Lucro Líquido Mensal</span>
+                                    <span id="lucroLiquidoMensal" class="font-bold text-green-700 text-xl">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Análise de Investimento -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-line text-green-600"></i> Análise de Investimento
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">Investimento Total</span>
+                                    <span id="investimentoTotalResumo" class="font-bold">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">Lucro Mensal</span>
+                                    <span id="lucroMensalResumo" class="font-bold text-green-600">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">Payback (meses)</span>
+                                    <span id="paybackResumo" class="font-bold text-blue-600">0</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-gray-600">ROI Anual</span>
+                                    <span id="roiAnualResumo" class="font-bold text-purple-600">0%</span>
+                                </div>
+                                <div class="p-2 bg-gray-50 rounded">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-gray-600">Viabilidade</span>
+                                        <span id="viabilidadeResumo" class="text-sm font-bold text-green-600">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="bg-white rounded-xl shadow-lg p-6 no-print">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-download text-blue-600"></i> Exportar Resultados
+                            </h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="exportarPDF()" class="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </button>
+                                <button onclick="exportarImagem()" class="bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-image"></i> Imagem
+                                </button>
+                                <button onclick="imprimirResultados()" class="col-span-2 bg-gray-700 hover:bg-gray-800 text-white py-2 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-print"></i> Imprimir Relatório Completo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-semibold text-gray-600">Carga Atual</span>
-                        <i class="fas fa-history text-blue-500"></i>
+
+            <!-- Tab 5: Gráficos -->
+            <div id="graficos" class="tab-content">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <i class="fas fa-chart-pie text-blue-600"></i> Gráficos e Visualizações
+                    </h2>
+                    
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Composição do Preço</h3>
+                            <div class="relative" style="height: 300px;">
+                                <canvas id="graficoComposicao"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2 text-center">Distribuição dos componentes do preço final</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Análise de Rentabilidade</h3>
+                            <div class="relative" style="height: 300px;">
+                                <canvas id="graficoRentabilidade"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2 text-center">Comparação entre diferentes cenários</p>
+                        </div>
+                        
+                        <div class="lg:col-span-2 bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Ponto de Equilíbrio</h3>
+                            <div class="relative" style="height: 400px;">
+                                <canvas id="graficoPontoEquilibrio"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2 text-center">Visualização do ponto onde receita = custos</p>
+                        </div>
+                        
+                        <div class="lg:col-span-2 bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Análise de Sensibilidade</h3>
+                            <div class="relative" style="height: 400px;">
+                                <canvas id="graficoSensibilidade"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2 text-center">Como variações afetam a lucratividade</p>
+                        </div>
                     </div>
-                    <div class="metric-value text-blue-600" id="resumo-carga-atual">0%</div>
-                    <div class="text-xs text-gray-500">Média do setor: 15-25%</div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-semibold text-gray-600">Pós-Reforma</span>
-                        <i class="fas fa-rocket text-purple-500"></i>
+            </div>
+
+            <!-- Tab 6: Comparativo -->
+            <div id="comparativo" class="tab-content">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <i class="fas fa-balance-scale text-blue-600"></i> Análise Comparativa
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-blue-800 mb-3 text-center">Cenário Atual</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span>Preço:</span>
+                                    <span class="font-bold" id="comparativoPrecoAtual">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Margem Líquida:</span>
+                                    <span class="font-bold" id="comparativoMargemAtual">0%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Lucro Mensal:</span>
+                                    <span class="font-bold" id="comparativoLucroAtual">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-green-800 mb-3 text-center">Otimista (+20%)</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span>Preço:</span>
+                                    <span class="font-bold" id="comparativoPrecoOtimista">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Margem Líquida:</span>
+                                    <span class="font-bold" id="comparativoMargemOtimista">0%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Lucro Mensal:</span>
+                                    <span class="font-bold" id="comparativoLucroOtimista">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-red-800 mb-3 text-center">Conservador (-15%)</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span>Preço:</span>
+                                    <span class="font-bold" id="comparativoPrecoConservador">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Margem Líquida:</span>
+                                    <span class="font-bold" id="comparativoMargemConservador">0%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Lucro Mensal:</span>
+                                    <span class="font-bold" id="comparativoLucroConservador">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="metric-value text-purple-600" id="resumo-carga-reforma">0%</div>
-                    <div class="text-xs text-gray-500">Estimativa IVA Dual</div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-gray-800 mb-4">Recomendação Baseada na Análise</h3>
+                        <p id="recomendacaoComparativo" class="text-gray-600">
+                            Preencha os dados na aba "Dados de Entrada" e clique em "Calcular Precificação Completa" para gerar a análise comparativa.
+                        </p>
+                    </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-semibold text-gray-600">Variação</span>
-                        <i class="fas fa-exchange-alt text-green-500"></i>
+            </div>
+
+            <!-- Tab 7: Aprendizado -->
+            <div id="didatica" class="tab-content">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-blue-600"></i> Aprendizado sobre Precificação
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-bold text-blue-800 mb-2">O que é Markup?</h4>
+                                <p class="text-blue-700">
+                                    Markup é um fator multiplicador aplicado sobre o custo para chegar ao preço de venda. 
+                                    É calculado considerando todos os custos, despesas e a margem de lucro desejada.
+                                </p>
+                                <p class="text-sm text-blue-600 mt-2">
+                                    Fórmula: Preço = Custo Total / (1 - %Margem - %Impostos - %Despesas)
+                                </p>
+                            </div>
+                            
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-bold text-green-800 mb-2">Margem Bruta vs Margem Líquida</h4>
+                                <ul class="list-disc pl-5 text-green-700 space-y-1">
+                                    <li><strong>Margem Bruta:</strong> Diferença entre preço e custos variáveis</li>
+                                    <li><strong>Margem Líquida:</strong> Lucro após todos os custos e despesas</li>
+                                    <li><strong>Importante:</strong> A margem líquida é o que realmente importa!</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="p-4 bg-purple-50 rounded-lg">
+                                <h4 class="font-bold text-purple-800 mb-2">Erros Comuns em Precificação</h4>
+                                <ul class="list-disc pl-5 text-purple-700 space-y-1">
+                                    <li>Não considerar todos os custos fixos</li>
+                                    <li>Esquecer impostos e taxas de pagamento</li>
+                                    <li>Copiar preço da concorrência sem análise</li>
+                                    <li>Não incluir margem de segurança</li>
+                                    <li>Esquecer a depreciação de equipamentos</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-4 bg-yellow-50 rounded-lg">
+                                <h4 class="font-bold text-yellow-800 mb-2">Dicas para Ajustar Preços</h4>
+                                <ul class="list-disc pl-5 text-yellow-700 space-y-1">
+                                    <li>Ajuste preços gradualmente (+5-10% por vez)</li>
+                                    <li>Comunique aumentos com antecedência</li>
+                                    <li>Ofereça valor adicional para justificar aumentos</li>
+                                    <li>Monitore a reação dos clientes</li>
+                                    <li>Revise preços periodicamente (a cada 3-6 meses)</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="metric-value text-green-600" id="resumo-variacao">0%</div>
-                    <div class="mt-2">
-                        <span class="badge badge-neutral" id="resumo-badge">NEUTRO</span>
+                    
+                    <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+                        <h3 class="font-bold text-gray-800 mb-2">Próximos Passos Recomendados</h3>
+                        <ol class="list-decimal pl-5 text-gray-700 space-y-2">
+                            <li>Complete todos os campos da aba "Dados de Entrada"</li>
+                            <li>Clique em "Calcular Precificação Completa"</li>
+                            <li>Analise os resultados na aba "Resultados"</li>
+                            <li>Explore os gráficos para visualizar melhor</li>
+                            <li>Compare diferentes cenários na aba "Comparativo"</li>
+                            <li>Use a análise de mercado para ajustar seu posicionamento</li>
+                            <li>Revise periodicamente conforme seu negócio evolui</li>
+                        </ol>
                     </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-semibold text-gray-600">Impacto Anual</span>
-                        <i class="fas fa-chart-bar text-orange-500"></i>
-                    </div>
-                    <div class="metric-value text-orange-600" id="resumo-impacto-anual">R$ 0</div>
-                    <div class="text-xs text-gray-500">Economia/Aumento em 12 meses</div>
                 </div>
             </div>
         </div>
 
-        <!-- RESTANTE DO HTML... -->
-        <!-- (O conteúdo continua, mas para economizar espaço vou mostrar apenas as seções principais) -->
-        
-        <!-- DADOS DA EMPRESA -->
-        <div class="card shadow-hard mb-8 animate-slide-up" id="dados-empresa">
-            <!-- Conteúdo será carregado via JS -->
+        <!-- Rodapé -->
+        <div class="mt-8 pt-6 border-t border-gray-200 text-center text-gray-600 text-sm no-print">
+            <p>
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                Esta ferramenta é educacional. Consulte um contador para análise específica do seu negócio.
+            </p>
+            <p class="mt-1">
+                Versão 4.0 - Inclui análise de mercado, investimento e ROI
+            </p>
         </div>
-
-        <!-- COMPARAÇÃO VISUAL -->
-        <div class="grid md:grid-cols-2 gap-8 mb-8" id="comparacao-visual">
-            <!-- Conteúdo será carregado via JS -->
-        </div>
-
-        <!-- NOVOS GRÁFICOS AVANÇADOS -->
-        <div class="card shadow-hard mb-8 animate-slide-up" id="graficos-avancados">
-            <!-- Conteúdo será carregado via JS -->
-        </div>
-
-        <!-- ANÁLISE E RECOMENDAÇÕES -->
-        <div class="card shadow-hard mb-8 animate-slide-up" id="recomendacoes-container">
-            <!-- Conteúdo será carregado via JS -->
-        </div>
-
-        <!-- RODAPÉ COM CRÉDITOS -->
-        <footer class="card shadow-hard animate-slide-up">
-            <div class="text-center">
-                <div class="logo-container inline-flex mb-6">
-                    <div class="logo-icon">B</div>
-                    <div class="logo-text">
-                        <div class="logo-title">BRAYAN ARAUJO</div>
-                        <div class="logo-subtitle">CONTADOR | ESPECIALISTA EM REFORMA TRIBUTÁRIA</div>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl font-bold text-gray-800 mb-3">Programa Desenvolvido por</h3>
-                <p class="text-3xl font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                    Brayan Araujo Contador
-                </p>
-                <p class="text-gray-600 mb-6">Contador | Especialista em Tributação | CRC 1SPXXXXXX</p>
-                
-                <div class="flex flex-col md:flex-row justify-center gap-6 text-gray-600 mb-6">
-                    <span><i class="fas fa-envelope mr-2"></i> brayancontabilidade@gmail.com</span>
-                    <span><i class="fas fa-globe mr-2"></i> linkedin.com/in/brayanaraujo</span>
-                    <span><i class="fas fa-phone mr-2"></i> (21) 99157-7383</span>
-                </div>
-                
-                <div class="flex justify-center gap-3">
-                    <button onclick="window.print()" class="btn-secondary px-4 py-2 rounded-full text-sm">
-                        <i class="fas fa-print mr-2"></i>Imprimir
-                    </button>
-                    <button onclick="app.salvarComoPDF()" class="btn-primary px-4 py-2 rounded-full text-sm">
-                        <i class="fas fa-file-pdf mr-2"></i>Salvar PDF
-                    </button>
-                    <button onclick="app.compartilhar()" class="btn-primary px-4 py-2 rounded-full text-sm">
-                        <i class="fas fa-share-alt mr-2"></i>Compartilhar
-                    </button>
-                    <button onclick="app.abrirContatoConsultoria()" class="btn-primary px-4 py-2 rounded-full text-sm">
-                        <i class="fas fa-calendar-check mr-2"></i>Consultoria
-                    </button>
-                </div>
-                
-                <p class="text-xs text-gray-400 mt-6">
-                    Versão 3.1 Professional - Dezembro 2024 | Comparativo Internacional e Custo de Implantação
-                </p>
-            </div>
-        </footer>
     </div>
 
-    <!-- BOTÃO FLUTUANTE -->
-    <button class="floating-action-button" onclick="app.scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+    <!-- Código JavaScript -->
+    <script>
+        // Variáveis globais
+        let graficoComposicao = null;
+        let graficoRentabilidade = null;
+        let graficoPontoEquilibrio = null;
+        let graficoSensibilidade = null;
+        let dadosCalculo = {};
+        let ultimoCalculoTime = 0;
+        const DEBOUNCE_DELAY = 300; // ms
 
-    <!-- JavaScript -->
-<script src="js/constants.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/calculations.js"></script>
-<script src="js/charts.js"></script>
-<script src="js/main.js"></script>
+        // Formatação de moeda
+        function formatarMoeda(valor) {
+            if (isNaN(valor) || valor === null || valor === undefined) {
+                return 'R$ 0,00';
+            }
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        // Formatação de porcentagem
+        function formatarPorcentagem(valor) {
+            if (isNaN(valor)) return '0,00%';
+            return valor.toFixed(2).replace('.', ',') + '%';
+        }
+
+        // Trocar entre as abas
+        function openTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.classList.remove('bg-blue-600', 'text-white');
+                button.classList.add('bg-gray-200', 'text-gray-700');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            const tabId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+            document.getElementById(tabId).classList.remove('bg-gray-200', 'text-gray-700');
+            document.getElementById(tabId).classList.add('bg-blue-600', 'text-white');
+
+            if (tabName === 'graficos') {
+                setTimeout(() => atualizarGraficos(), 100);
+            }
+        }
+
+        // Sugerir impostos para MEI
+        function sugerirImpostosMEI() {
+            const qtd = parseFloat(document.getElementById('qtdVendaMensal').value) || 100;
+            const precoEstimado = parseFloat(document.getElementById('materiaPrima').value) * 3 || 50;
+            const faturamentoEstimado = qtd * precoEstimado;
+            
+            // DAS mensal para MEI (aproximado)
+            const dasMensal = 70.00;
+            const percentualDas = (dasMensal / faturamentoEstimado) * 100;
+            
+            // ISS ou ICMS (dependendo da atividade) - estimativa conservadora
+            let impostosAdicionais = 0;
+            const segmento = document.getElementById('segmentoMercado').value;
+            
+            if (segmento === 'servicos') {
+                impostosAdicionais = 2; // ISS aproximado
+            } else if (segmento === 'alimentos' || segmento === 'moda') {
+                impostosAdicionais = 3; // ICMS aproximado
+            }
+            
+            const totalImpostos = Math.min(percentualDas + impostosAdicionais, 8);
+            
+            document.getElementById('impostos').value = totalImpostos.toFixed(2);
+            
+            alert(`Sugestão para MEI: ${totalImpostos.toFixed(2)}% (DAS: ${percentualDas.toFixed(2)}% + impostos municipais: ${impostosAdicionais}%)`);
+        }
+
+        // Função simplificada para atualização automática
+        function calcularAutomatico() {
+            // Coletar dados básicos
+            coletarDadosBasicos();
+            
+            // Calcular custos básicos
+            calcularCustosBasicosSimples();
+            
+            // Atualizar resumo rápido
+            atualizarResumoRapidoSimples();
+        }
+
+        // Coletar dados básicos para cálculo automático
+        function coletarDadosBasicos() {
+            dadosCalculo = {
+                // Custos variáveis
+                materiaPrima: parseFloat(document.getElementById('materiaPrima').value) || 0,
+                embalagem: parseFloat(document.getElementById('embalagem').value) || 0,
+                frete: parseFloat(document.getElementById('frete').value) || 0,
+                outrosCustosVar: parseFloat(document.getElementById('outrosCustosVar').value) || 0,
+                
+                // Custos fixos
+                aluguel: parseFloat(document.getElementById('aluguel').value) || 0,
+                salarios: parseFloat(document.getElementById('salarios').value) || 0,
+                energia: parseFloat(document.getElementById('energia').value) || 0,
+                internet: parseFloat(document.getElementById('internet').value) || 0,
+                marketing: parseFloat(document.getElementById('marketing').value) || 0,
+                manutencao: parseFloat(document.getElementById('manutencao').value) || 0,
+                software: parseFloat(document.getElementById('software').value) || 0,
+                
+                // Quantidade de vendas
+                qtdVendaMensal: parseFloat(document.getElementById('qtdVendaMensal').value) || 0,
+                
+                // Percentuais
+                taxasPagamento: parseFloat(document.getElementById('taxasPagamento').value) || 0,
+                devolucoes: parseFloat(document.getElementById('devolucoes').value) || 0,
+                margemSeguranca: parseFloat(document.getElementById('margemSeguranca').value) || 0
+            };
+        }
+
+        // Cálculo simplificado para atualização automática
+        function calcularCustosBasicosSimples() {
+            // Custos variáveis unitários
+            dadosCalculo.custoVariavelUnitario = 
+                dadosCalculo.materiaPrima + 
+                dadosCalculo.embalagem + 
+                dadosCalculo.frete + 
+                dadosCalculo.outrosCustosVar;
+            
+            // Custos fixos mensais
+            dadosCalculo.custoFixoMensal = 
+                dadosCalculo.aluguel + 
+                dadosCalculo.salarios + 
+                dadosCalculo.energia + 
+                dadosCalculo.internet + 
+                dadosCalculo.marketing + 
+                dadosCalculo.manutencao + 
+                dadosCalculo.software;
+            
+            // Custo fixo unitário
+            dadosCalculo.custoFixoUnitario = dadosCalculo.qtdVendaMensal > 0 ? 
+                dadosCalculo.custoFixoMensal / dadosCalculo.qtdVendaMensal : 0;
+            
+            // Custo total unitário base
+            dadosCalculo.custoTotalUnitario = dadosCalculo.custoVariavelUnitario + dadosCalculo.custoFixoUnitario;
+            
+            // Custos adicionais percentuais
+            dadosCalculo.totalPercentuaisAdicionais = 
+                (dadosCalculo.taxasPagamento + 
+                 dadosCalculo.devolucoes + 
+                 dadosCalculo.margemSeguranca) / 100;
+            
+            // Custo total com adicionais
+            dadosCalculo.custoTotalComAdicionais = dadosCalculo.custoTotalUnitario * (1 + dadosCalculo.totalPercentuaisAdicionais);
+        }
+
+        // Atualizar resumo rápido de forma simplificada
+        function atualizarResumoRapidoSimples() {
+            document.getElementById('resumoCustoVariavel').textContent = formatarMoeda(dadosCalculo.custoVariavelUnitario || 0);
+            document.getElementById('resumoCustoFixoUnit').textContent = formatarMoeda(dadosCalculo.custoFixoUnitario || 0);
+            document.getElementById('resumoCustoTotalUnit').textContent = formatarMoeda(dadosCalculo.custoTotalUnitario || 0);
+            
+            const custosAdicionaisUnit = dadosCalculo.custoTotalUnitario * dadosCalculo.totalPercentuaisAdicionais || 0;
+            document.getElementById('resumoCustosAdicionais').textContent = formatarMoeda(custosAdicionaisUnit);
+            
+            // Atualizar investimento total
+            atualizarInvestimentoTotal();
+        }
+
+        // Atualizar investimento total automaticamente
+        function atualizarInvestimentoTotal() {
+            const investEquipamentos = parseFloat(document.getElementById('investEquipamentos').value) || 0;
+            const investEstoque = parseFloat(document.getElementById('investEstoque').value) || 0;
+            const investReformas = parseFloat(document.getElementById('investReformas').value) || 0;
+            const investCapitalGiro = parseFloat(document.getElementById('investCapitalGiro').value) || 0;
+            
+            const investimentoTotal = investEquipamentos + investEstoque + investReformas + investCapitalGiro;
+            document.getElementById('investimentoTotal').textContent = formatarMoeda(investimentoTotal);
+        }
+
+        // Calcular precificação completa
+        function calcularPrecificacaoCompleta() {
+            // Coletar todos os dados
+            coletarDadosEntrada();
+            
+            // Validar dados básicos
+            if (!validarDados()) return;
+            
+            // Calcular custos básicos
+            calcularCustosBasicos();
+            
+            // Calcular preço conforme método
+            calcularPrecoPorMetodo();
+            
+            // Calcular indicadores financeiros
+            calcularIndicadoresFinanceiros();
+            
+            // Calcular ROI e investimento
+            calcularROIeInvestimento();
+            
+            // Atualizar interface
+            atualizarInterfaceResultados();
+            
+            // Ir para resultados
+            openTab('resultados');
+        }
+
+        function coletarDadosEntrada() {
+            dadosCalculo = {
+                // Custos variáveis
+                materiaPrima: parseFloat(document.getElementById('materiaPrima').value) || 0,
+                embalagem: parseFloat(document.getElementById('embalagem').value) || 0,
+                frete: parseFloat(document.getElementById('frete').value) || 0,
+                outrosCustosVar: parseFloat(document.getElementById('outrosCustosVar').value) || 0,
+                
+                // Custos fixos
+                aluguel: parseFloat(document.getElementById('aluguel').value) || 0,
+                salarios: parseFloat(document.getElementById('salarios').value) || 0,
+                energia: parseFloat(document.getElementById('energia').value) || 0,
+                internet: parseFloat(document.getElementById('internet').value) || 0,
+                marketing: parseFloat(document.getElementById('marketing').value) || 0,
+                manutencao: parseFloat(document.getElementById('manutencao').value) || 0,
+                
+                // Custos adicionais
+                software: parseFloat(document.getElementById('software').value) || 0,
+                taxasPagamento: parseFloat(document.getElementById('taxasPagamento').value) || 0,
+                devolucoes: parseFloat(document.getElementById('devolucoes').value) || 0,
+                margemSeguranca: parseFloat(document.getElementById('margemSeguranca').value) || 0,
+                
+                // Metas e impostos
+                qtdVendaMensal: parseFloat(document.getElementById('qtdVendaMensal').value) || 0,
+                margemLucro: parseFloat(document.getElementById('margemLucro').value) || 0,
+                impostos: parseFloat(document.getElementById('impostos').value) || 0,
+                comissoes: parseFloat(document.getElementById('comissoes').value) || 0,
+                
+                // Configurações
+                metodoPrecificacao: document.getElementById('metodoPrecificacao').value,
+                arredondamento: document.getElementById('arredondamento').value,
+                precoMinimo: parseFloat(document.getElementById('precoMinimo').value) || 0,
+                precoConcorrencia: parseFloat(document.getElementById('precoConcorrencia').value) || 0,
+                
+                // Investimento
+                investEquipamentos: parseFloat(document.getElementById('investEquipamentos').value) || 0,
+                investEstoque: parseFloat(document.getElementById('investEstoque').value) || 0,
+                investReformas: parseFloat(document.getElementById('investReformas').value) || 0,
+                investCapitalGiro: parseFloat(document.getElementById('investCapitalGiro').value) || 0,
+                expectativaRetorno: parseFloat(document.getElementById('expectativaRetorno').value) || 12,
+                custoOportunidade: parseFloat(document.getElementById('custoOportunidade').value) || 0,
+                vidaUtilEquipamentos: parseFloat(document.getElementById('vidaUtilEquipamentos').value) || 5,
+                valorResidual: parseFloat(document.getElementById('valorResidual').value) || 10
+            };
+        }
+
+        function validarDados() {
+            if (dadosCalculo.materiaPrima <= 0) {
+                alert('Informe o custo da matéria-prima/produto.');
+                return false;
+            }
+            if (dadosCalculo.qtdVendaMensal <= 0) {
+                alert('Informe a quantidade esperada de vendas mensais.');
+                return false;
+            }
+            if (dadosCalculo.margemLucro <= 0) {
+                alert('Informe a margem bruta desejada.');
+                return false;
+            }
+            return true;
+        }
+
+        function calcularCustosBasicos() {
+            // Custos variáveis unitários
+            dadosCalculo.custoVariavelUnitario = 
+                dadosCalculo.materiaPrima + 
+                dadosCalculo.embalagem + 
+                dadosCalculo.frete + 
+                dadosCalculo.outrosCustosVar;
+            
+            // Custos fixos mensais
+            dadosCalculo.custoFixoMensal = 
+                dadosCalculo.aluguel + 
+                dadosCalculo.salarios + 
+                dadosCalculo.energia + 
+                dadosCalculo.internet + 
+                dadosCalculo.marketing + 
+                dadosCalculo.manutencao + 
+                dadosCalculo.software;
+            
+            // Custos adicionais percentuais
+            dadosCalculo.totalPercentuaisAdicionais = 
+                (dadosCalculo.taxasPagamento + 
+                 dadosCalculo.devolucoes + 
+                 dadosCalculo.margemSeguranca) / 100;
+            
+            // Custo fixo unitário
+            dadosCalculo.custoFixoUnitario = dadosCalculo.qtdVendaMensal > 0 ? 
+                dadosCalculo.custoFixoMensal / dadosCalculo.qtdVendaMensal : 0;
+            
+            // Custo total unitário base
+            dadosCalculo.custoTotalUnitario = dadosCalculo.custoVariavelUnitario + dadosCalculo.custoFixoUnitario;
+        }
+
+        function calcularPrecoPorMetodo() {
+            let precoVenda = 0;
+            const margemDesejada = dadosCalculo.margemLucro / 100;
+            const impostosPercentual = dadosCalculo.impostos / 100;
+            const comissoesPercentual = dadosCalculo.comissoes / 100;
+            const adicionaisPercentual = dadosCalculo.totalPercentuaisAdicionais;
+            
+            switch(dadosCalculo.metodoPrecificacao) {
+                case 'markup':
+                    // Método Markup (considerando todos os percentuais)
+                    const totalPercentuais = margemDesejada + impostosPercentual + comissoesPercentual + adicionaisPercentual;
+                    if (totalPercentuais >= 1) {
+                        alert('A soma de todos os percentuais (margem, impostos, comissões, taxas) não pode ser igual ou maior que 100%');
+                        precoVenda = dadosCalculo.custoTotalUnitario * 1.5; // Fallback
+                    } else {
+                        precoVenda = dadosCalculo.custoTotalUnitario / (1 - totalPercentuais);
+                    }
+                    break;
+                    
+                case 'margem':
+                    // Método Margem de Contribuição
+                    const margemContribuicaoDesejada = margemDesejada;
+                    const despesasPercentuais = impostosPercentual + comissoesPercentual + adicionaisPercentual;
+                    precoVenda = (dadosCalculo.custoVariavelUnitario + (dadosCalculo.custoFixoMensal / dadosCalculo.qtdVendaMensal)) / 
+                                (1 - margemContribuicaoDesejada - despesasPercentuais);
+                    break;
+                    
+                case 'custo':
+                    // Método Custo + Margem (simples)
+                    precoVenda = dadosCalculo.custoTotalUnitario * (1 + margemDesejada);
+                    // Adicionar percentuais sobre o preço
+                    precoVenda = precoVenda / (1 - impostosPercentual - comissoesPercentual - adicionaisPercentual);
+                    break;
+                    
+                case 'valor':
+                    // Precificação por valor (baseado no mercado)
+                    if (dadosCalculo.precoConcorrencia > 0) {
+                        precoVenda = dadosCalculo.precoConcorrencia;
+                    } else {
+                        precoVenda = dadosCalculo.custoTotalUnitario * (1 + margemDesejada);
+                    }
+                    break;
+            }
+            
+            // Aplicar arredondamento
+            dadosCalculo.precoVendaBruto = precoVenda;
+            dadosCalculo.precoVenda = aplicarArredondamento(precoVenda);
+            
+            // Ajustar para preço mínimo se necessário
+            if (dadosCalculo.precoMinimo > 0 && dadosCalculo.precoVenda < dadosCalculo.precoMinimo) {
+                dadosCalculo.precoVenda = dadosCalculo.precoMinimo;
+            }
+        }
+
+        function aplicarArredondamento(preco) {
+            if (dadosCalculo.arredondamento === 'nenhum') return preco;
+            
+            if (['0.90', '0.95', '0.99'].includes(dadosCalculo.arredondamento)) {
+                const valorArredondamento = parseFloat(dadosCalculo.arredondamento);
+                const parteInteira = Math.floor(preco);
+                return parteInteira + valorArredondamento;
+            } else if (['5', '10'].includes(dadosCalculo.arredondamento)) {
+                const multiplo = parseInt(dadosCalculo.arredondamento);
+                return Math.round(preco / multiplo) * multiplo;
+            }
+            return preco;
+        }
+
+        function calcularIndicadoresFinanceiros() {
+            const preco = dadosCalculo.precoVenda;
+            const qtd = dadosCalculo.qtdVendaMensal;
+            
+            // Valores unitários
+            dadosCalculo.impostoUnitario = preco * (dadosCalculo.impostos / 100);
+            dadosCalculo.comissaoUnitaria = preco * (dadosCalculo.comissoes / 100);
+            dadosCalculo.taxasPagamentoUnit = preco * (dadosCalculo.taxasPagamento / 100);
+            dadosCalculo.custoDevolucoesUnit = preco * (dadosCalculo.devolucoes / 100);
+            
+            // Margem de contribuição
+            dadosCalculo.margemContribuicaoUnit = preco - dadosCalculo.custoVariavelUnitario;
+            
+            // Lucro bruto unitário
+            dadosCalculo.lucroBrutoUnit = preco - 
+                dadosCalculo.custoVariavelUnitario - 
+                dadosCalculo.custoFixoUnitario -
+                dadosCalculo.impostoUnitario -
+                dadosCalculo.comissaoUnitaria -
+                dadosCalculo.taxasPagamentoUnit -
+                dadosCalculo.custoDevolucoesUnit;
+            
+            // Depreciação
+            dadosCalculo.depreciacaoMensal = calcularDepreciacao();
+            dadosCalculo.depreciacaoUnit = dadosCalculo.depreciacaoMensal / qtd;
+            
+            // Lucro líquido unitário
+            dadosCalculo.lucroLiquidoUnit = dadosCalculo.lucroBrutoUnit - dadosCalculo.depreciacaoUnit;
+            
+            // Valores totais mensais
+            dadosCalculo.faturamentoBruto = preco * qtd;
+            dadosCalculo.lucroBrutoMensal = dadosCalculo.lucroBrutoUnit * qtd;
+            dadosCalculo.lucroLiquidoMensal = dadosCalculo.lucroLiquidoUnit * qtd;
+            
+            // Percentuais
+            dadosCalculo.margemBruta = (dadosCalculo.lucroBrutoUnit / preco) * 100;
+            dadosCalculo.margemLiquida = (dadosCalculo.lucroLiquidoUnit / preco) * 100;
+            
+            // Ponto de equilíbrio
+            const margemContribuicaoUnit = preco - dadosCalculo.custoVariavelUnitario - 
+                                         dadosCalculo.impostoUnitario - dadosCalculo.comissaoUnitaria -
+                                         dadosCalculo.taxasPagamentoUnit - dadosCalculo.custoDevolucoesUnit;
+            dadosCalculo.pontoEquilibrio = Math.ceil(dadosCalculo.custoFixoMensal / margemContribuicaoUnit);
+            dadosCalculo.pontoEquilibrioFinanceiro = dadosCalculo.pontoEquilibrio * preco;
+            
+            // Markup
+            dadosCalculo.markup = ((preco - dadosCalculo.custoTotalUnitario) / dadosCalculo.custoTotalUnitario) * 100;
+        }
+
+        function calcularDepreciacao() {
+            const investimentoEquipamentos = dadosCalculo.investEquipamentos;
+            const vidaUtilAnos = dadosCalculo.vidaUtilEquipamentos;
+            const valorResidualPercent = dadosCalculo.valorResidual / 100;
+            
+            if (investimentoEquipamentos <= 0 || vidaUtilAnos <= 0) return 0;
+            
+            const valorDepreciavel = investimentoEquipamentos * (1 - valorResidualPercent);
+            const depreciacaoAnual = valorDepreciavel / vidaUtilAnos;
+            
+            return depreciacaoAnual / 12; // Mensal
+        }
+
+        function calcularROIeInvestimento() {
+            // Investimento total
+            dadosCalculo.investimentoTotal = 
+                dadosCalculo.investEquipamentos + 
+                dadosCalculo.investEstoque + 
+                dadosCalculo.investReformas + 
+                dadosCalculo.investCapitalGiro;
+            
+            // Payback (meses para recuperar investimento)
+            if (dadosCalculo.lucroLiquidoMensal > 0) {
+                dadosCalculo.paybackMeses = Math.ceil(dadosCalculo.investimentoTotal / dadosCalculo.lucroLiquidoMensal);
+            } else {
+                dadosCalculo.paybackMeses = 999; // Nunca
+            }
+            
+            // ROI Anual
+            if (dadosCalculo.investimentoTotal > 0) {
+                const lucroAnual = dadosCalculo.lucroLiquidoMensal * 12;
+                dadosCalculo.roiAnual = (lucroAnual / dadosCalculo.investimentoTotal) * 100;
+            } else {
+                dadosCalculo.roiAnual = 0;
+            }
+            
+            // Lucro mensal necessário para expectativa de retorno
+            if (dadosCalculo.expectativaRetorno > 0) {
+                dadosCalculo.lucroMensalNecessario = dadosCalculo.investimentoTotal / dadosCalculo.expectativaRetorno;
+            } else {
+                dadosCalculo.lucroMensalNecessario = 0;
+            }
+            
+            // Análise de viabilidade
+            dadosCalculo.viabilidade = analisarViabilidade();
+        }
+
+        function analisarViabilidade() {
+            if (dadosCalculo.lucroLiquidoMensal <= 0) {
+                return { nivel: 'INVIÁVEL', cor: 'red', descricao: 'O negócio apresenta prejuízo.' };
+            }
+            
+            if (dadosCalculo.paybackMeses > 36) {
+                return { nivel: 'ARISCADO', cor: 'orange', descricao: 'Retorno muito longo (>3 anos).' };
+            }
+            
+            if (dadosCalculo.roiAnual < 20) {
+                return { nivel: 'MODERADO', cor: 'yellow', descricao: 'Retorno abaixo do mercado.' };
+            }
+            
+            if (dadosCalculo.roiAnual >= 20 && dadosCalculo.roiAnual < 50) {
+                return { nivel: 'VIÁVEL', cor: 'green', descricao: 'Retorno atrativo.' };
+            }
+            
+            return { nivel: 'ALTAMENTE VIÁVEL', cor: 'darkgreen', descricao: 'Excelente retorno sobre investimento.' };
+        }
+
+        function atualizarInterfaceResultados() {
+            // Preço sugerido
+            document.getElementById('precoVenda').textContent = formatarMoeda(dadosCalculo.precoVenda);
+            document.getElementById('metodoUtilizado').textContent = 
+                dadosCalculo.metodoPrecificacao.charAt(0).toUpperCase() + dadosCalculo.metodoPrecificacao.slice(1);
+            document.getElementById('lucroMensalTexto').textContent = `Lucro mensal: ${formatarMoeda(dadosCalculo.lucroLiquidoMensal)}`;
+            
+            // Margens
+            document.getElementById('margemBrutaResultado').textContent = formatarPorcentagem(dadosCalculo.margemBruta);
+            document.getElementById('margemLiquidaResultado').textContent = formatarPorcentagem(dadosCalculo.margemLiquida);
+            document.getElementById('margemContribuicao').textContent = formatarMoeda(dadosCalculo.margemContribuicaoUnit);
+            
+            // Barras de margem
+            document.getElementById('barraMargemBruta').style.width = Math.min(dadosCalculo.margemBruta, 100) + '%';
+            document.getElementById('barraMargemLiquida').style.width = Math.min(dadosCalculo.margemLiquida, 100) + '%';
+            
+            // Ponto de equilíbrio
+            document.getElementById('pontoEquilibrio').textContent = dadosCalculo.pontoEquilibrio + ' unidades';
+            document.getElementById('pontoEquilibrioFinanceiro').textContent = formatarMoeda(dadosCalculo.pontoEquilibrioFinanceiro);
+            
+            // ROI
+            document.getElementById('roiMensal').textContent = formatarPorcentagem(dadosCalculo.roiAnual / 12);
+            
+            // Composição detalhada
+            atualizarComposicaoDetalhada();
+            
+            // Resumo financeiro
+            atualizarResumoFinanceiro();
+            
+            // Análise de investimento
+            atualizarAnaliseInvestimento();
+            
+            // Atualizar indicadores de saúde
+            atualizarIndicadoresSaude();
+            
+            // Atualizar análise comparativa
+            atualizarAnaliseComparativa();
+            
+            // Atualizar gráficos
+            setTimeout(() => atualizarGraficos(), 100);
+        }
+
+        function atualizarComposicaoDetalhada() {
+            const preco = dadosCalculo.precoVenda;
+            
+            // Calcular percentuais
+            const percMateriaPrima = (dadosCalculo.materiaPrima / preco) * 100;
+            const percOutrosVariaveis = ((dadosCalculo.embalagem + dadosCalculo.frete + dadosCalculo.outrosCustosVar) / preco) * 100;
+            const percCustosFixos = (dadosCalculo.custoFixoUnitario / preco) * 100;
+            const percImpostos = (dadosCalculo.impostoUnitario / preco) * 100;
+            const percComissoes = ((dadosCalculo.comissaoUnitaria + dadosCalculo.taxasPagamentoUnit + dadosCalculo.custoDevolucoesUnit) / preco) * 100;
+            const percLucroBruto = (dadosCalculo.lucroBrutoUnit / preco) * 100;
+            const percDepreciacao = (dadosCalculo.depreciacaoUnit / preco) * 100;
+            const percLucroLiquido = (dadosCalculo.lucroLiquidoUnit / preco) * 100;
+            
+            // Atualizar valores
+            document.getElementById('compMateriaPrima').textContent = 
+                `${formatarMoeda(dadosCalculo.materiaPrima)} (${percMateriaPrima.toFixed(1)}%)`;
+            document.getElementById('compOutrosVariaveis').textContent = 
+                `${formatarMoeda(dadosCalculo.embalagem + dadosCalculo.frete + dadosCalculo.outrosCustosVar)} (${percOutrosVariaveis.toFixed(1)}%)`;
+            document.getElementById('compCustosFixos').textContent = 
+                `${formatarMoeda(dadosCalculo.custoFixoUnitario)} (${percCustosFixos.toFixed(1)}%)`;
+            document.getElementById('compImpostos').textContent = 
+                `${formatarMoeda(dadosCalculo.impostoUnitario)} (${percImpostos.toFixed(1)}%)`;
+            document.getElementById('compComissoes').textContent = 
+                `${formatarMoeda(dadosCalculo.comissaoUnitaria + dadosCalculo.taxasPagamentoUnit + dadosCalculo.custoDevolucoesUnit)} (${percComissoes.toFixed(1)}%)`;
+            document.getElementById('compLucroBruto').textContent = 
+                `${formatarMoeda(dadosCalculo.lucroBrutoUnit)} (${percLucroBruto.toFixed(1)}%)`;
+            document.getElementById('compDepreciacao').textContent = 
+                `${formatarMoeda(dadosCalculo.depreciacaoUnit)} (${percDepreciacao.toFixed(1)}%)`;
+            document.getElementById('compLucroLiquido').textContent = 
+                `${formatarMoeda(dadosCalculo.lucroLiquidoUnit)} (${percLucroLiquido.toFixed(1)}%)`;
+            
+            // Atualizar barras
+            document.getElementById('barraMateriaPrima').style.width = percMateriaPrima + '%';
+            document.getElementById('barraOutrosVariaveis').style.width = percOutrosVariaveis + '%';
+            document.getElementById('barraCustosFixos').style.width = percCustosFixos + '%';
+            document.getElementById('barraImpostos').style.width = percImpostos + '%';
+            document.getElementById('barraComissoes').style.width = percComissoes + '%';
+            document.getElementById('barraLucroBruto').style.width = percLucroBruto + '%';
+            document.getElementById('barraDepreciacao').style.width = percDepreciacao + '%';
+            document.getElementById('barraLucroLiquido').style.width = percLucroLiquido + '%';
+        }
+
+        function atualizarResumoFinanceiro() {
+            document.getElementById('faturamentoBruto').textContent = formatarMoeda(dadosCalculo.faturamentoBruto);
+            document.getElementById('custosVariaveisTotais').textContent = 
+                formatarMoeda(dadosCalculo.custoVariavelUnitario * dadosCalculo.qtdVendaMensal);
+            document.getElementById('margemContribuicaoTotal').textContent = 
+                formatarMoeda(dadosCalculo.margemContribuicaoUnit * dadosCalculo.qtdVendaMensal);
+            document.getElementById('custosFixosTotais').textContent = formatarMoeda(dadosCalculo.custoFixoMensal);
+            document.getElementById('impostosTotais').textContent = 
+                formatarMoeda(dadosCalculo.impostoUnitario * dadosCalculo.qtdVendaMensal);
+            document.getElementById('comissoesTotais').textContent = 
+                formatarMoeda((dadosCalculo.comissaoUnitaria + dadosCalculo.taxasPagamentoUnit + dadosCalculo.custoDevolucoesUnit) * dadosCalculo.qtdVendaMensal);
+            document.getElementById('depreciacaoTotal').textContent = formatarMoeda(dadosCalculo.depreciacaoMensal);
+            document.getElementById('lucroLiquidoMensal').textContent = formatarMoeda(dadosCalculo.lucroLiquidoMensal);
+        }
+
+        function atualizarAnaliseInvestimento() {
+            document.getElementById('investimentoTotalResumo').textContent = formatarMoeda(dadosCalculo.investimentoTotal);
+            document.getElementById('lucroMensalResumo').textContent = formatarMoeda(dadosCalculo.lucroLiquidoMensal);
+            document.getElementById('paybackResumo').textContent = dadosCalculo.paybackMeses;
+            document.getElementById('roiAnualResumo').textContent = formatarPorcentagem(dadosCalculo.roiAnual);
+            document.getElementById('viabilidadeResumo').textContent = dadosCalculo.viabilidade.nivel;
+            document.getElementById('viabilidadeResumo').className = `text-sm font-bold text-${dadosCalculo.viabilidade.cor}-600`;
+            
+            // Atualizar resultados ROI
+            document.getElementById('lucroMensalNecessario').textContent = formatarMoeda(dadosCalculo.lucroMensalNecessario);
+            document.getElementById('paybackMeses').textContent = dadosCalculo.paybackMeses + ' meses';
+            document.getElementById('roiAnual').textContent = formatarPorcentagem(dadosCalculo.roiAnual);
+            document.getElementById('resultadosROI').classList.remove('hidden');
+            
+            // Atualizar análise de viabilidade
+            document.getElementById('viabilidadeInvestimento').textContent = dadosCalculo.viabilidade.nivel;
+            document.getElementById('viabilidadeInvestimento').className = `text-2xl font-bold text-${dadosCalculo.viabilidade.cor}-600`;
+            document.getElementById('tempoRetorno').textContent = dadosCalculo.paybackMeses;
+            document.getElementById('lucratividadeProjetada').textContent = formatarPorcentagem(dadosCalculo.margemLiquida);
+            document.getElementById('riscoInvestimento').textContent = 
+                dadosCalculo.paybackMeses > 24 ? 'ALTO' : dadosCalculo.paybackMeses > 12 ? 'MÉDIO' : 'BAIXO';
+            document.getElementById('recomendacaoInvestimento').textContent = dadosCalculo.viabilidade.descricao;
+        }
+
+        function atualizarIndicadoresSaude() {
+            // Risco de precificação
+            let riscoPercent = 0;
+            if (dadosCalculo.margemLiquida < 10) riscoPercent = 80;
+            else if (dadosCalculo.margemLiquida < 20) riscoPercent = 40;
+            else if (dadosCalculo.margemLiquida < 30) riscoPercent = 20;
+            
+            document.getElementById('barraRisco').style.width = riscoPercent + '%';
+            document.getElementById('barraRisco').className = `progress-fill ${riscoPercent > 60 ? 'risk-high' : riscoPercent > 30 ? 'risk-medium' : 'risk-low'}`;
+            document.getElementById('riscoPrecificacao').textContent = riscoPercent > 60 ? 'Alto' : riscoPercent > 30 ? 'Médio' : 'Baixo';
+            
+            // Margem de segurança
+            const margemSeguranca = dadosCalculo.margemSeguranca || 0;
+            document.getElementById('barraMargemSeguranca').style.width = Math.min(margemSeguranca, 20) * 5 + '%';
+            document.getElementById('margemSegurancaValor').textContent = margemSeguranca + '%';
+            
+            // Competitividade
+            let competitividade = 50;
+            if (dadosCalculo.precoConcorrencia > 0) {
+                const diferencaPercent = ((dadosCalculo.precoVenda - dadosCalculo.precoConcorrencia) / dadosCalculo.precoConcorrencia) * 100;
+                if (diferencaPercent > 20) competitividade = 20;
+                else if (diferencaPercent > 10) competitividade = 40;
+                else if (Math.abs(diferencaPercent) <= 10) competitividade = 70;
+                else if (diferencaPercent < -10) competitividade = 90;
+                
+                document.getElementById('barraCompetitividade').style.width = competitividade + '%';
+                document.getElementById('competitividade').textContent = 
+                    competitividade > 80 ? 'Alta' : competitividade > 60 ? 'Boa' : competitividade > 40 ? 'Média' : 'Baixa';
+            }
+        }
+
+        function atualizarAnaliseComparativa() {
+            if (dadosCalculo.precoVenda <= 0) return;
+            
+            // Cenário atual
+            document.getElementById('comparativoPrecoAtual').textContent = formatarMoeda(dadosCalculo.precoVenda);
+            document.getElementById('comparativoMargemAtual').textContent = formatarPorcentagem(dadosCalculo.margemLiquida);
+            document.getElementById('comparativoLucroAtual').textContent = formatarMoeda(dadosCalculo.lucroLiquidoMensal);
+            
+            // Cenário otimista (+20%)
+            const precoOtimista = dadosCalculo.precoVenda * 1.2;
+            const lucroOtimista = dadosCalculo.lucroLiquidoMensal * 1.3; // Assumindo que lucro aumenta mais que preço
+            const margemOtimista = dadosCalculo.margemLiquida * 1.1;
+            
+            document.getElementById('comparativoPrecoOtimista').textContent = formatarMoeda(precoOtimista);
+            document.getElementById('comparativoMargemOtimista').textContent = formatarPorcentagem(margemOtimista);
+            document.getElementById('comparativoLucroOtimista').textContent = formatarMoeda(lucroOtimista);
+            
+            // Cenário conservador (-15%)
+            const precoConservador = dadosCalculo.precoVenda * 0.85;
+            const lucroConservador = dadosCalculo.lucroLiquidoMensal * 0.7; // Lucro cai mais que preço
+            const margemConservador = dadosCalculo.margemLiquida * 0.8;
+            
+            document.getElementById('comparativoPrecoConservador').textContent = formatarMoeda(precoConservador);
+            document.getElementById('comparativoMargemConservador').textContent = formatarPorcentagem(margemConservador);
+            document.getElementById('comparativoLucroConservador').textContent = formatarMoeda(lucroConservador);
+            
+            // Recomendação
+            let recomendacao = "";
+            if (dadosCalculo.margemLiquida < 15) {
+                recomendacao = "Sua margem está baixa. Considere aumentar preços ou reduzir custos.";
+            } else if (dadosCalculo.margemLiquida > 30) {
+                recomendacao = "Excelente margem! Você tem espaço para investir em marketing ou oferecer descontos promocionais.";
+            } else {
+                recomendacao = "Margem saudável. Mantenha o preço atual e foque em aumentar o volume de vendas.";
+            }
+            
+            document.getElementById('recomendacaoComparativo').textContent = recomendacao;
+        }
+
+        // Funções de gráficos
+        function atualizarGraficos() {
+            if (document.getElementById('graficoComposicao')) {
+                atualizarGraficoComposicao();
+            }
+            if (document.getElementById('graficoRentabilidade')) {
+                atualizarGraficoRentabilidade();
+            }
+            if (document.getElementById('graficoPontoEquilibrio')) {
+                atualizarGraficoPontoEquilibrio();
+            }
+            if (document.getElementById('graficoSensibilidade')) {
+                atualizarGraficoSensibilidade();
+            }
+        }
+
+        function atualizarGraficoComposicao() {
+            const ctx = document.getElementById('graficoComposicao');
+            if (!ctx) return;
+            
+            if (graficoComposicao) {
+                graficoComposicao.destroy();
+            }
+            
+            const preco = dadosCalculo.precoVenda || 1;
+            const dados = [
+                (dadosCalculo.materiaPrima / preco) * 100,
+                ((dadosCalculo.embalagem + dadosCalculo.frete + dadosCalculo.outrosCustosVar) / preco) * 100,
+                (dadosCalculo.custoFixoUnitario / preco) * 100,
+                (dadosCalculo.impostoUnitario / preco) * 100,
+                ((dadosCalculo.comissaoUnitaria + dadosCalculo.taxasPagamentoUnit + dadosCalculo.custoDevolucoesUnit) / preco) * 100,
+                (dadosCalculo.depreciacaoUnit / preco) * 100,
+                (dadosCalculo.lucroLiquidoUnit / preco) * 100
+            ];
+            
+            // Verificar se há dados válidos
+            if (dados.every(valor => valor <= 0)) {
+                // Dados padrão para gráfico vazio
+                graficoComposicao = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Sem dados'],
+                        datasets: [{
+                            data: [100],
+                            backgroundColor: ['#e5e7eb'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+                return;
+            }
+            
+            graficoComposicao = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Matéria-prima', 'Outros Variáveis', 'Custos Fixos', 'Impostos', 'Taxas e Comissões', 'Depreciação', 'Lucro Líquido'],
+                    datasets: [{
+                        data: dados,
+                        backgroundColor: [
+                            '#ef4444', // red-500
+                            '#f97316', // orange-500
+                            '#f59e0b', // yellow-500
+                            '#3b82f6', // blue-500
+                            '#8b5cf6', // violet-500
+                            '#6b7280', // gray-500
+                            '#10b981'  // green-500
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function atualizarGraficoRentabilidade() {
+            const ctx = document.getElementById('graficoRentabilidade');
+            if (!ctx) return;
+            
+            if (graficoRentabilidade) {
+                graficoRentabilidade.destroy();
+            }
+            
+            const dados = [
+                dadosCalculo.margemBruta || 0,
+                dadosCalculo.margemLiquida || 0,
+                dadosCalculo.markup || 0,
+                dadosCalculo.roiAnual / 12 || 0
+            ];
+            
+            graficoRentabilidade = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Margem Bruta', 'Margem Líquida', 'Markup', 'ROI Mensal'],
+                    datasets: [{
+                        label: 'Percentual (%)',
+                        data: dados,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(245, 158, 11, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(16, 185, 129)',
+                            'rgb(139, 92, 246)',
+                            'rgb(245, 158, 11)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Percentual (%)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function atualizarGraficoPontoEquilibrio() {
+            const ctx = document.getElementById('graficoPontoEquilibrio');
+            if (!ctx) return;
+            
+            if (graficoPontoEquilibrio) {
+                graficoPontoEquilibrio.destroy();
+            }
+            
+            const qtdMax = Math.max(dadosCalculo.qtdVendaMensal * 1.5, dadosCalculo.pontoEquilibrio * 1.5, 100);
+            const pontos = Math.min(qtdMax, 20);
+            const step = qtdMax / pontos;
+            
+            const quantidades = [];
+            const receitas = [];
+            const custosTotais = [];
+            const custosFixos = [];
+            
+            for (let i = 0; i <= pontos; i++) {
+                const qtd = Math.floor(i * step);
+                if (qtd > qtdMax) break;
+                
+                quantidades.push(qtd);
+                receitas.push(qtd * dadosCalculo.precoVenda);
+                
+                const custoVariavelTotal = qtd * dadosCalculo.custoVariavelUnitario;
+                const custoTotal = custoVariavelTotal + dadosCalculo.custoFixoMensal;
+                custosTotais.push(custoTotal);
+                custosFixos.push(dadosCalculo.custoFixoMensal);
+            }
+            
+            graficoPontoEquilibrio = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: quantidades,
+                    datasets: [
+                        {
+                            label: 'Receita Total',
+                            data: receitas,
+                            borderColor: 'rgb(16, 185, 129)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Custo Total',
+                            data: custosTotais,
+                            borderColor: 'rgb(239, 68, 68)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Custo Fixo',
+                            data: custosFixos,
+                            borderColor: 'rgb(245, 158, 11)',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: false,
+                            borderDash: [5, 5],
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Quantidade Vendida'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Valor (R$)'
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                pontoEquilibrio: {
+                                    type: 'line',
+                                    xMin: dadosCalculo.pontoEquilibrio,
+                                    xMax: dadosCalculo.pontoEquilibrio,
+                                    borderColor: 'rgb(139, 92, 246)',
+                                    borderWidth: 2,
+                                    borderDash: [5, 5],
+                                    label: {
+                                        content: `PE: ${dadosCalculo.pontoEquilibrio} unidades`,
+                                        enabled: true,
+                                        position: 'end'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function atualizarGraficoSensibilidade() {
+            const ctx = document.getElementById('graficoSensibilidade');
+            if (!ctx) return;
+            
+            if (graficoSensibilidade) {
+                graficoSensibilidade.destroy();
+            }
+            
+            // Cenários: -20%, -10%, Atual, +10%, +20%
+            const variacoes = [-20, -10, 0, 10, 20];
+            const lucros = variacoes.map(variacao => {
+                const variacaoPreco = 1 + (variacao / 100);
+                const novoPreco = dadosCalculo.precoVenda * variacaoPreco;
+                const novaQtd = dadosCalculo.qtdVendaMensal * (1 - (variacao / 200)); // Elasticidade: redução de 0.5% na quantidade para cada 1% de aumento no preço
+                
+                const novoFaturamento = novoPreco * novaQtd;
+                const novoCustoVariavel = dadosCalculo.custoVariavelUnitario * novaQtd;
+                const novoLucro = novoFaturamento - novoCustoVariavel - dadosCalculo.custoFixoMensal;
+                
+                return novoLucro;
+            });
+            
+            graficoSensibilidade = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: variacoes.map(v => v + '%'),
+                    datasets: [{
+                        label: 'Lucro Mensal (R$)',
+                        data: lucros,
+                        borderColor: 'rgb(16, 185, 129)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Variação no Preço'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Lucro Mensal (R$)'
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Lucro: ${formatarMoeda(context.raw)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function analisarMercado() {
+            const segmento = document.getElementById('segmentoMercado').value;
+            const nivelConcorrencia = document.getElementById('nivelConcorrencia').value;
+            const posicionamento = document.getElementById('posicionamentoMercado').value;
+            
+            if (!segmento) {
+                alert('Selecione um segmento de mercado.');
+                return;
+            }
+            
+            // Referências de preço por segmento
+            const referencias = {
+                alimentos: { min: 25, ideal: 50, max: 100 },
+                moda: { min: 50, ideal: 120, max: 300 },
+                artesanato: { min: 30, ideal: 80, max: 200 },
+                servicos: { min: 100, ideal: 250, max: 1000 },
+                tecnologia: { min: 50, ideal: 150, max: 500 },
+                beleza: { min: 20, ideal: 60, max: 150 },
+                outros: { min: 40, ideal: 100, max: 250 }
+            };
+            
+            const ref = referencias[segmento] || referencias.outros;
+            
+            // Ajustar por nível de concorrência
+            let ajusteConcorrencia = 1;
+            switch(nivelConcorrencia) {
+                case 'alta': ajusteConcorrencia = 0.8; break;
+                case 'media': ajusteConcorrencia = 1.0; break;
+                case 'baixa': ajusteConcorrencia = 1.2; break;
+                case 'nicho': ajusteConcorrencia = 1.5; break;
+            }
+            
+            // Ajustar por posicionamento
+            let ajustePosicionamento = 1;
+            switch(posicionamento) {
+                case 'lider': ajustePosicionamento = 0.9; break;
+                case 'qualidade': ajustePosicionamento = 1.3; break;
+                case 'diferente': ajustePosicionamento = 1.2; break;
+                case 'nicho': ajustePosicionamento = 1.4; break;
+            }
+            
+            // Calcular faixas
+            const precoMinimo = ref.min * ajusteConcorrencia;
+            const precoIdeal = ref.ideal * ajusteConcorrencia * ajustePosicionamento;
+            const precoMaximo = ref.max * ajusteConcorrencia * ajustePosicionamento;
+            
+            // Atualizar interface
+            document.getElementById('precoMinimoMercado').textContent = formatarMoeda(precoMinimo);
+            document.getElementById('precoRecomendadoMercado').textContent = formatarMoeda(precoIdeal);
+            document.getElementById('precoMaximoMercado').textContent = formatarMoeda(precoMaximo);
+            
+            // Gerar estratégias
+            const estrategias = gerarEstrategias(segmento, nivelConcorrencia, posicionamento);
+            document.getElementById('estrategiasRecomendadas').textContent = estrategias;
+            
+            // Gerar riscos
+            const riscos = gerarRiscos(segmento, nivelConcorrencia);
+            document.getElementById('riscosMercado').textContent = riscos;
+            
+            // Mostrar resultados
+            document.getElementById('resultadosAnaliseMercado').classList.remove('hidden');
+        }
+
+        function gerarEstrategias(segmento, concorrencia, posicionamento) {
+            let estrategias = [];
+            
+            if (posicionamento === 'qualidade') {
+                estrategias.push('• Invista em materiais premium e acabamento');
+                estrategias.push('• Destaque certificações e processos de qualidade');
+                estrategias.push('• Ofereça garantia estendida e suporte especializado');
+            }
+            
+            if (posicionamento === 'lider') {
+                estrategias.push('• Otimize custos para manter preços baixos');
+                estrategias.push('• Foque em volume de vendas e eficiência');
+                estrategias.push('• Ofereça preços promocionais regularmente');
+            }
+            
+            if (concorrencia === 'alta') {
+                estrategias.push('• Diferencie-se através do atendimento e experiência');
+                estrategias.push('• Crie conteúdo educativo sobre seu produto');
+                estrategias.push('• Ofereça benefícios exclusivos para clientes fiéis');
+            }
+            
+            if (segmento === 'artesanato') {
+                estrategias.push('• Conte a história por trás de cada peça');
+                estrategias.push('• Ofereça personalização e edições limitadas');
+                estrategias.push('• Participe de feiras e eventos do segmento');
+            }
+            
+            return estrategias.join(' ');
+        }
+
+        function gerarRiscos(segmento, concorrencia) {
+            let riscos = [];
+            
+            if (concorrencia === 'alta') {
+                riscos.push('• Guerra de preços pode reduzir margens');
+                riscos.push('• Dificuldade em se destacar no mercado');
+                riscos.push('• Necessidade constante de inovação');
+            }
+            
+            if (segmento === 'moda') {
+                riscos.push('• Estoque obsoleto devido a mudanças de tendência');
+                riscos.push('• Sazonalidade forte nas vendas');
+                riscos.push('• Concorrência com grandes varejistas');
+            }
+            
+            if (segmento === 'alimentos') {
+                riscos.push('• Prazos de validade curtos');
+                riscos.push('• Necessidade de controle rigoroso de qualidade');
+                riscos.push('• Regulamentações sanitárias específicas');
+            }
+            
+            return riscos.join(' ');
+        }
+
+        // Funções auxiliares
+        function limparCampos() {
+            document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+            document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+            document.getElementById('metodoPrecificacao').value = 'markup';
+            document.getElementById('arredondamento').value = 'nenhum';
+            document.getElementById('segmentoMercado').value = '';
+            document.getElementById('nivelConcorrencia').value = 'media';
+            document.getElementById('posicionamentoMercado').value = 'lider';
+            
+            openTab('dados');
+            
+            // Resetar gráficos
+            if (graficoComposicao) graficoComposicao.destroy();
+            if (graficoRentabilidade) graficoRentabilidade.destroy();
+            if (graficoPontoEquilibrio) graficoPontoEquilibrio.destroy();
+            if (graficoSensibilidade) graficoSensibilidade.destroy();
+            
+            graficoComposicao = null;
+            graficoRentabilidade = null;
+            graficoPontoEquilibrio = null;
+            graficoSensibilidade = null;
+            
+            // Atualizar resumo
+            calcularAutomatico();
+        }
+
+        function carregarExemplo() {
+            // Dados de exemplo - confecção de roupas
+            document.getElementById('materiaPrima').value = 25.00;
+            document.getElementById('embalagem').value = 3.00;
+            document.getElementById('frete').value = 8.00;
+            document.getElementById('outrosCustosVar').value = 2.00;
+            
+            document.getElementById('aluguel').value = 800.00;
+            document.getElementById('salarios').value = 1500.00;
+            document.getElementById('energia').value = 200.00;
+            document.getElementById('internet').value = 120.00;
+            document.getElementById('marketing').value = 300.00;
+            document.getElementById('manutencao').value = 100.00;
+            
+            document.getElementById('software').value = 89.90;
+            document.getElementById('taxasPagamento').value = 3.99;
+            document.getElementById('devolucoes').value = 2.00;
+            document.getElementById('margemSeguranca').value = 5.00;
+            
+            document.getElementById('qtdVendaMensal').value = 80;
+            document.getElementById('margemLucro').value = 40;
+            document.getElementById('impostos').value = 6.5;
+            document.getElementById('comissoes').value = 10;
+            
+            document.getElementById('precoMinimo').value = 79.90;
+            document.getElementById('precoConcorrencia').value = 129.90;
+            
+            // Investimento
+            document.getElementById('investEquipamentos').value = 5000.00;
+            document.getElementById('investEstoque').value = 3000.00;
+            document.getElementById('investReformas').value = 2000.00;
+            document.getElementById('investCapitalGiro').value = 2000.00;
+            document.getElementById('expectativaRetorno').value = 12;
+            document.getElementById('custoOportunidade').value = 0.75;
+            document.getElementById('vidaUtilEquipamentos').value = 5;
+            document.getElementById('valorResidual').value = 10;
+            
+            // Mercado
+            document.getElementById('segmentoMercado').value = 'moda';
+            
+            // Atualizar automaticamente
+            calcularAutomatico();
+            calcularPrecificacaoCompleta();
+            openTab('resultados');
+        }
+
+        // Funções de exportação
+        function exportarPDF() {
+            alert('Funcionalidade de PDF será implementada na próxima versão. Use a opção de impressão.');
+        }
+
+        function exportarImagem() {
+            alert('Funcionalidade de imagem será implementada na próxima versão.');
+        }
+
+        function imprimirResultados() {
+            window.print();
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            openTab('dados');
+            
+            // Configurar eventos para atualização automática
+            const inputs = document.querySelectorAll('input[type="number"], select');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    calcularAutomatico();
+                });
+                input.addEventListener('change', function() {
+                    calcularAutomatico();
+                });
+            });
+            
+            // Inicializar com cálculo automático
+            calcularAutomatico();
+            
+            // Inicializar gráficos com dados vazios
+            setTimeout(() => {
+                if (document.getElementById('graficoComposicao')) {
+                    atualizarGraficos();
+                }
+            }, 500);
+        });
+    </script>
 </body>
 </html>
